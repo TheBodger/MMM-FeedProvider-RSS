@@ -22,7 +22,6 @@ var request = require('request'); // for fetching the feed
 //obtained from a helper file of modules
 
 var RSS = require('./RSS');
-var QUEUE = require('./queueidea');
 var rsssource = new RSS.RSSsource();
 
 // local variables, held at provider level as this is a common module
@@ -43,7 +42,6 @@ module.exports = NodeHelper.create({
 		console.log(this.name + ' node_helper is started!');
 		this.logger = {};
 		this.logger[null] = RSS.createLogger("logfile_Startup" + ".log", this.name);
-		this.queue = new QUEUE.queue("single");
 	},
 
 	showElapsed: function () {
@@ -158,8 +156,6 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived: function (notification, payload) {
 
-		var self = this;
-
 		if (this.logger[payload.moduleinstance] == null) {
 
 			this.logger[payload.moduleinstance] = RSS.createLogger("logfile_" + payload.moduleinstance + ".log", payload.moduleinstance);
@@ -177,22 +173,10 @@ module.exports = NodeHelper.create({
 		//
 
 		switch (notification) {
-			case "CONFIG":
-				this.setconfig(payload.moduleinstance, payload.config);
-				break;
-			case "RESET":
-				this.reset(payload);
-				break;
-			case "UPDATE":
-				//because we can get some of these in a browser refresh scenario, we check for the
-				//local storage before accepting the request
-
-				if (providerstorage[payload.moduleinstance] == null) { break; }
-				self.processfeeds(payload.moduleinstance, payload.providerid)
-				break;
-			case "STATUS":
-				this.showstatus(payload.moduleinstance);
-				break;
+			case "CONFIG": this.setconfig(payload.moduleinstance,payload.config); break;
+			case "RESET": this.reset(payload); break;
+			case "UPDATE": this.processfeeds(payload.moduleinstance,payload.providerid); break;
+			case "STATUS": this.showstatus(payload.moduleinstance); break;
 		}
 
 	},
@@ -227,15 +211,9 @@ module.exports = NodeHelper.create({
 			self.logger[moduleinstance].info("In process feed: " + providerid);
 			self.logger[moduleinstance].info("In process feed: " + feedidx);
 
-			self.logger[moduleinstance].info("building queue " + self.queue.queue.length);
-
-			//we have to pass the providerid as we are going async now
-
-			self.queue.addtoqueue(function () {self.fetchfeed(feed, moduleinstance, providerid, ++feedidx); });
+			self.fetchfeed(feed, moduleinstance, providerid, ++feedidx); //we have to pass the providerid as we are going async now
 
 		});
-
-		this.queue.startqueue(1000);
 
 	},
 
@@ -284,13 +262,8 @@ module.exports = NodeHelper.create({
 			this.logger[moduleinstance].info(JSON.stringify(source));
 			this.logger[moduleinstance].info(JSON.stringify(feeds));
 
-			this.sendNotificationToMasterModule("UPDATED_STUFF_" + moduleinstance, payloadforprovider);
-
+			this.sendNotificationToMasterModule("UPDATED_STUFF_"+moduleinstance, payloadforprovider);
 		}
-
-		this.logger[moduleinstance].info("In send, queue details " + this.queue.queue_started + " " + this.queue.queue_busy + "" + this.queue.queue.length);
-
-		this.queue.processended();
 
 	},
 
@@ -313,28 +286,36 @@ module.exports = NodeHelper.create({
 		//each one is unique to hopefully stop dodgy async stuff hitting us
 
 		var req = 'req_';
-		var req = request(feed.feedURL, { timeout: 10000, pool: false });
+		this[req + moduleinstance] = request(feed.feedURL, { timeout: 10000, pool: false });
+		//var req = request(feed.feedURL, { timeout: 10000, pool: false });
 
 		//console.log("about to process req: ");
 
-		req.setMaxListeners(50);
+		this[req + moduleinstance].setMaxListeners(50);
+		//req.setMaxListeners(50);
 
 		// Some feeds do not respond without user-agent and accept headers.
 
-		req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
-		req.setHeader('accept', 'text/html,application/xhtml+xml');
+		this[req + moduleinstance].setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
+		this[req + moduleinstance].setHeader('accept', 'text/html,application/xhtml+xml');
+
+		//req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
+		//req.setHeader('accept', 'text/html,application/xhtml+xml');
 
 		var feedparser = 'feedparser_';
 
-		var feedparser = new FeedParser();
+		feedparser = new FeedParser();
+		//var feedparser = new FeedParser();
 
 		// Define our handlers
 
-		req.on('error', self.done);
+		this[req + moduleinstance].on('error', self.done);
+		//req.on('error', self.done);
 
 		//console.log("about to action the request");
 
-		req.on('response', function (res) {
+		this[req + moduleinstance].on('response', function (res) {
+		//req.on('response', function (res) {
 
 			if (res.statusCode != 200) return self.emit('error', new Error('Bad status code'));
 
@@ -342,8 +323,10 @@ module.exports = NodeHelper.create({
 
 			//res = maybeTranslate(res, charset);
 
-			self.logger[moduleinstance].info("res: " + res);
+			self.logger[moduleinstance].info("feedparser start: " + feedparser.meta.title);
+			//self.logger[moduleinstance].info("feedparser start: " + feedparser.meta.title);
 
+			//res.pipe(feedparser);
 			res.pipe(feedparser);
 
 		});
@@ -351,10 +334,14 @@ module.exports = NodeHelper.create({
 		var maxfeeddate = new Date(0);
 
 		feedparser.on('error', self.done);
+		//feedparser.on('error', self.done);
 
 		feedparser.on('end', function () {
+		//feedparser.on('end', function () {
+
 			
 			self.logger[moduleinstance].info("feedparser end: " + feedparser.title);
+			//self.logger[moduleinstance].info("feedparser end: " + feedparser.title);
 
 			if (new Date(0) < maxfeeddate) {
 				providerstorage[moduleinstance].trackingfeeddates[feedidx]['latestfeedpublisheddate'] = maxfeeddate;
@@ -365,8 +352,11 @@ module.exports = NodeHelper.create({
 		});
 
 		feedparser.on('meta', function (meta) {
+		//feedparser.on('meta', function (meta) {
+
 			
 			self.logger[moduleinstance].info("feedparser meta: " + feedparser.meta.title);
+			//self.logger[moduleinstance].info("feedparser meta: " + feedparser.meta.title);
 
 			rsssource.title = meta.title;
 			rsssource.sourcetitle = sourcetitle;
@@ -375,8 +365,10 @@ module.exports = NodeHelper.create({
 		});
 
 		feedparser.on('readable', function () {
+		//feedparser.on('readable', function () {
 
 			self.logger[moduleinstance].info("feedparser readable: " + feedparser.meta.title);
+			//self.logger[moduleinstance].info("feedparser readable: " + feedparser.meta.title);
 
 			var post;
 
@@ -384,7 +376,7 @@ module.exports = NodeHelper.create({
 
 			while (post = this.read()) {
 
-				self.logger[moduleinstance].info("feedparser post read: " + JSON.stringify(post));
+				self.logger[moduleinstance].info("feedparser post read: " + post.title);
 
 				//ignore any feed older than feed.lastFeedDate or older than the last feed sent back to the modules
 				//feed without a feed will be given the current latest feed data

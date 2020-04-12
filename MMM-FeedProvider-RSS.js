@@ -158,7 +158,6 @@ Module.register("MMM-FeedProvider-RSS", {
 
 			//initial request
 			self.sendNotificationToNodeHelper("UPDATE", { moduleinstance: self.identifier, providerid: self.config.id });
-			
 
 			setInterval(function () {
 
@@ -193,7 +192,7 @@ Module.register("MMM-FeedProvider-RSS", {
 		// as there is only one node helper for all instances of this module
 		// we have to filter any responses that are not for us by checking this.identifier
 
-		console.log(this.name + " received a socket notification: " + notification + " - Payload: " + nhpayload);
+		//console.log(this.name + " received a socket notification: " + notification + " - Payload: " + nhpayload);
 
 		var self = this;
 
