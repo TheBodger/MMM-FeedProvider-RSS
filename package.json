@@ -18,6 +18,8 @@
     "provider"
   ],
   "dependencies": {
+    "htmlparser2": "^1.0.1",
+    "winston": "~0.0.1",
   },
   "license": "MIT",
   "bugs": {
