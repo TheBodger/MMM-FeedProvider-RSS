@@ -19,7 +19,8 @@
   ],
   "dependencies": {
     "htmlparser2": "^1.0.1",
-    "winston": "~0.0.1",
+    "feedparser": "^4.0.1",
+    "winston": "^3.2.0",
   },
   "license": "MIT",
   "bugs": {
