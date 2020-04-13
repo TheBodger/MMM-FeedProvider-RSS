@@ -17,11 +17,7 @@
     "module",
     "provider"
   ],
-  "dependencies": {
-    "htmlparser2": "latest",
-    "feedparser": "latest",
-    "winston": "latest"
-  },
+  "dependencies": {},
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/TheBodger/MMM-FeedProvider-RSS/issues"

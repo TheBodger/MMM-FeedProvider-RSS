@@ -21,6 +21,7 @@ var request = require('request'); // for fetching the feed
 //pseudo structures for commonality across all modules
 //obtained from a helper file of modules
 
+var LOG = require('./LOG');
 var RSS = require('./RSS');
 var QUEUE = require('./queueidea');
 var rsssource = new RSS.RSSsource();
@@ -42,8 +43,8 @@ module.exports = NodeHelper.create({
 	start: function () {
 		console.log(this.name + ' node_helper is started!');
 		this.logger = {};
-		this.logger[null] = RSS.createLogger("logfile_Startup" + ".log", this.name);
-		this.queue = new QUEUE.queue("single");
+		this.logger[null] = LOG.createLogger("logs/logfile_Startup" + ".log", this.name);
+		this.queue = new QUEUE.queue("single",false);
 	},
 
 	showElapsed: function () {
@@ -162,7 +163,7 @@ module.exports = NodeHelper.create({
 
 		if (this.logger[payload.moduleinstance] == null) {
 
-			this.logger[payload.moduleinstance] = RSS.createLogger("logfile_" + payload.moduleinstance + ".log", payload.moduleinstance);
+			this.logger[payload.moduleinstance] = LOG.createLogger("logs/logfile_" + payload.moduleinstance + ".log", payload.moduleinstance);
 
 		};
 
@@ -187,7 +188,7 @@ module.exports = NodeHelper.create({
 				//because we can get some of these in a browser refresh scenario, we check for the
 				//local storage before accepting the request
 
-				if (providerstorage[payload.moduleinstance] == null) { break; }
+				if (providerstorage[payload.moduleinstance] == null) { break; } //need to sort this out later !!
 				self.processfeeds(payload.moduleinstance, payload.providerid)
 				break;
 			case "STATUS":
@@ -235,7 +236,7 @@ module.exports = NodeHelper.create({
 
 		});
 
-		this.queue.startqueue(1000);
+		this.queue.startqueue(providerstorage[moduleinstance].config.waitforqueuetime);
 
 	},
 
@@ -277,18 +278,16 @@ module.exports = NodeHelper.create({
 
 		var payloadforprovider = { providerid: providerid, source: source, payloadformodule: feeds.items }
 
-		if (feeds.items.length > 0) {
+		//console.log(payloadforprovider.title);
+		this.logger[moduleinstance].info("In send, source, feeds // sending items this time: " + (feeds.items.length > 0));
+		this.logger[moduleinstance].info(JSON.stringify(source));
+		this.logger[moduleinstance].info(JSON.stringify(feeds));
 
-			//console.log(payloadforprovider.title);
-			this.logger[moduleinstance].info("In send, source, feeds");
-			this.logger[moduleinstance].info(JSON.stringify(source));
-			this.logger[moduleinstance].info(JSON.stringify(feeds));
+		if (feeds.items.length > 0) {
 
 			this.sendNotificationToMasterModule("UPDATED_STUFF_" + moduleinstance, payloadforprovider);
 
 		}
-
-		this.logger[moduleinstance].info("In send, queue details " + this.queue.queue_started + " " + this.queue.queue_busy + "" + this.queue.queue.length);
 
 		this.queue.processended();
 
