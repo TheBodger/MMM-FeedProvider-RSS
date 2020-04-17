@@ -1,4 +1,6 @@
 ﻿const htmlparser2 = require("htmlparser2");
+const axios = require("axios");
+var LOG = require('./LOG');
 
 exports.RSSitem = function (id, title, description, pubdate, age, imageURL, categories) {
 	this.id = id;				// use title as probably uniue and then we hashcode it
@@ -88,6 +90,41 @@ exports.RSSsource = function () {
 	this.title = '';
 	this.sourcetitle = '';
 	this.url = '';
+};
+
+//	async function executeAsyncTask() {
+//	const valueA = await functionA();
+//	const valueB = await functionB(valueA);
+//	return function3(valueA, valueB);
+//}
+
+exports.checkfortrackingpixel = async function (url, moduleinstance) {
+
+	var self = this;
+
+	if (self.logger == null) {
+		self.logger = LOG.createLogger("logs/rss.log", "rss"); // will add logging by name if needed
+	}
+
+	self.logger.info(`check for pixel ${url}`);
+
+	try {
+		let response = await axios.head(url);
+
+		self.logger.info(`waited ${response.headers["content-length"]}`);
+
+		if (response.headers["content-length"] == "0") {
+			return true;
+		}
+		else {
+			return false;
+        }
+
+	} catch (error) {
+		console.error(`Could not get the URL: ${url} because we got an error: ${error}`);
+	}
+	self.logger.info(`dropped out the bottom `);
+	return false;
 };
 
 

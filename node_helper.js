@@ -18,6 +18,9 @@ var moment = require("moment");
 var FeedParser = require('feedparser');
 var request = require('request'); // for fetching the feed
 
+const axios = require('axios');
+const fs = require('fs').promises;
+
 //pseudo structures for commonality across all modules
 //obtained from a helper file of modules
 
@@ -41,10 +44,11 @@ var latestfeedpublisheddate = new Date(0) // set the date so no feeds are filter
 module.exports = NodeHelper.create({
 
 	start: function () {
+		this.debug = false;
 		console.log(this.name + ' node_helper is started!');
 		this.logger = {};
 		this.logger[null] = LOG.createLogger("logs/logfile_Startup" + ".log", this.name);
-		this.queue = new QUEUE.queue("single",false);
+		this.queue = new QUEUE.queue("single", false);
 	},
 
 	showElapsed: function () {
@@ -65,7 +69,7 @@ module.exports = NodeHelper.create({
 
 	setconfig: function (moduleinstance, config) {
 
-		this.logger[moduleinstance].info("In setconfig: " + moduleinstance + " " + config);
+		if (this.debug) { this.logger[moduleinstance].info("In setconfig: " + moduleinstance + " " + config); }
 
 		//store a local copy so we dont have keep moving it about
 
@@ -77,25 +81,18 @@ module.exports = NodeHelper.create({
 
 		providerstorage[moduleinstance].config.feeds.forEach(function (configfeed) {
 
-			//console.log(configfeed); 
-
 			var feed = { sourcetitle: '', lastFeedDate: '', feedURL: '', latestfeedpublisheddate: new Date(0) };
 
 			//store the actual timestamp to start filtering, this will change as new feeds are pulled to the latest date of those feeds
 			//if no date is available on a feed, then the current latest date of a feed published is allocated to it
 
-			feed.lastFeedDate = self.calcTimestamp(configfeed.oldestAge);
+			feed.lastFeedDate = self.calcTimestamp(configfeed.oldestage);
 			feed.feedURL = configfeed.feedurl;
 			feed.sourcetitle = configfeed.feedtitle;
 
 			providerstorage[moduleinstance].trackingfeeddates.push(feed);
 
 		});
-
-		//console.log("loaded config for provider: " + id);
-		//console.log(providerstorage[id].config);
-		//console.log("loaded feeds ");
-		//console.log(providerstorage[id].trackingfeeddates);
 
 	},
 
@@ -104,6 +101,8 @@ module.exports = NodeHelper.create({
 		//calculate the actual timestamp to use for filtering feeds, 
 		//options are timestamp format, today for midnight + 0.0001 seconds today, or age in minutes
 		//determine the format of the data in age
+
+		console.log(age);
 
 		var filterDate = new Date();
 
@@ -167,8 +166,10 @@ module.exports = NodeHelper.create({
 
 		};
 
-		this.logger[payload.moduleinstance].info(this.name + " NODE HELPER notification: " + notification + " - Payload: ");
-		this.logger[payload.moduleinstance].info(JSON.stringify(payload));
+		if (this.debug) {
+			this.logger[payload.moduleinstance].info(this.name + " NODE HELPER notification: " + notification + " - Payload: ");
+			this.logger[payload.moduleinstance].info(JSON.stringify(payload));
+		}
 
 		//we can receive these messages:
 		//
@@ -219,16 +220,17 @@ module.exports = NodeHelper.create({
 		var self = this;
 		var feedidx = -1;
 
-		this.logger[moduleinstance].info("In processfeeds: " + moduleinstance + " " + providerid);
+		if (this.debug) { this.logger[moduleinstance].info("In processfeeds: " + moduleinstance + " " + providerid); }
 
 		providerstorage[moduleinstance].trackingfeeddates.forEach(function (feed) {
 
-			self.logger[moduleinstance].info("In process feed: " + JSON.stringify(feed));
-			self.logger[moduleinstance].info("In process feed: " + moduleinstance);
-			self.logger[moduleinstance].info("In process feed: " + providerid);
-			self.logger[moduleinstance].info("In process feed: " + feedidx);
-
-			self.logger[moduleinstance].info("building queue " + self.queue.queue.length);
+			if (self.debug) {
+				self.logger[moduleinstance].info("In process feed: " + JSON.stringify(feed));
+				self.logger[moduleinstance].info("In process feed: " + moduleinstance);
+				self.logger[moduleinstance].info("In process feed: " + providerid);
+				self.logger[moduleinstance].info("In process feed: " + feedidx);
+				self.logger[moduleinstance].info("building queue " + self.queue.queue.length);
+			}
 
 			//we have to pass the providerid as we are going async now
 
@@ -278,10 +280,11 @@ module.exports = NodeHelper.create({
 
 		var payloadforprovider = { providerid: providerid, source: source, payloadformodule: feeds.items }
 
-		//console.log(payloadforprovider.title);
-		this.logger[moduleinstance].info("In send, source, feeds // sending items this time: " + (feeds.items.length > 0));
-		this.logger[moduleinstance].info(JSON.stringify(source));
-		this.logger[moduleinstance].info(JSON.stringify(feeds));
+		if (this.debug) {
+			this.logger[moduleinstance].info("In send, source, feeds // sending items this time: " + (feeds.items.length > 0));
+			this.logger[moduleinstance].info(JSON.stringify(source));
+			this.logger[moduleinstance].info(JSON.stringify(feeds));
+		}
 
 		if (feeds.items.length > 0) {
 
@@ -294,11 +297,12 @@ module.exports = NodeHelper.create({
 	},
 
 	fetchfeed: function (feed, moduleinstance, providerid, feedidx) {
-
-		this.logger[moduleinstance].info("In fetch feed: " + JSON.stringify(feed));
-		this.logger[moduleinstance].info("In fetch feed: " + moduleinstance);
-		this.logger[moduleinstance].info("In fetch feed: " + providerid);
-		this.logger[moduleinstance].info("In fetch feed: " + feedidx);
+		if (this.debug) {
+			this.logger[moduleinstance].info("In fetch feed: " + JSON.stringify(feed));
+			this.logger[moduleinstance].info("In fetch feed: " + moduleinstance);
+			this.logger[moduleinstance].info("In fetch feed: " + providerid);
+			this.logger[moduleinstance].info("In fetch feed: " + feedidx);
+		}
 
 		var rssitems = new RSS.RSSitems();
 
@@ -341,7 +345,7 @@ module.exports = NodeHelper.create({
 
 			//res = maybeTranslate(res, charset);
 
-			self.logger[moduleinstance].info("res: " + res);
+			if (self.debug) { self.logger[moduleinstance].info("res: " + res); }
 
 			res.pipe(feedparser);
 
@@ -353,19 +357,27 @@ module.exports = NodeHelper.create({
 
 		feedparser.on('end', function () {
 			
-			self.logger[moduleinstance].info("feedparser end: " + feedparser.title);
+			if (self.debug) { self.logger[moduleinstance].info("feedparser end: " + feedparser.title); }
 
 			if (new Date(0) < maxfeeddate) {
 				providerstorage[moduleinstance].trackingfeeddates[feedidx]['latestfeedpublisheddate'] = maxfeeddate;
 			}
+			var idx = 0;
+			for (idx = 0; idx < rssitems.length; idx++) {
 
+				if (rssitems[idx].imageURL != null) {
+					if (RSS.checkfortrackingpixel(rssitems[idx].imageURL, moduleinstance)) {
+						rssitems[idx].imageURL = null;
+					}
+				}
+			}
 			self.send(moduleinstance, providerid, rsssource, rssitems);
 			self.done();
 		});
 
 		feedparser.on('meta', function (meta) {
 			
-			self.logger[moduleinstance].info("feedparser meta: " + feedparser.meta.title);
+			if (self.debug) { self.logger[moduleinstance].info("feedparser meta: " + feedparser.meta.title); }
 
 			rsssource.title = meta.title;
 			rsssource.sourcetitle = sourcetitle;
@@ -375,7 +387,7 @@ module.exports = NodeHelper.create({
 
 		feedparser.on('readable', function () {
 
-			self.logger[moduleinstance].info("feedparser readable: " + feedparser.meta.title);
+			if (self.debug) {self.logger[moduleinstance].info("feedparser readable: " + feedparser.meta.title);}
 
 			var post;
 
@@ -383,7 +395,7 @@ module.exports = NodeHelper.create({
 
 			while (post = this.read()) {
 
-				self.logger[moduleinstance].info("feedparser post read: " + JSON.stringify(post));
+				self.logger[moduleinstance].info("feedparser post read: " + JSON.stringify(post.title));
 
 				//ignore any feed older than feed.lastFeedDate or older than the last feed sent back to the modules
 				//feed without a feed will be given the current latest feed data
@@ -415,28 +427,40 @@ module.exports = NodeHelper.create({
 
 					rssarticle.imageURL = post.image.url;
 
+					if (self.debug) {self.logger[moduleinstance].info("Image URL 1" + JSON.stringify(rssarticle.imageURL));}
+
 					if (rssarticle.imageURL == null) {
-
 						if (post.enclosures.length > 0) {
-
 							rssarticle.imageURL = post.enclosures[0].url;
-
+							if (self.debug) { self.logger[moduleinstance].info("Image URL 2" + JSON.stringify(rssarticle.imageURL)); }
 						}
 						else {
-
 							rssarticle.imageURL = rssarticle.getimagefromhtml(post.description);
-
+								if (self.debug) { self.logger[moduleinstance].info("Image URL 3" + JSON.stringify(rssarticle.imageURL)); }
 						}
 
 					}
 
+					if (self.debug) { self.logger[moduleinstance].info("Image URL 4" + JSON.stringify(rssarticle.imageURL)); }
+
+					if (rssarticle.imageURL == '') {
+						rssarticle.imageURL = null;
+					}
+
+					if (self.debug) { self.logger[moduleinstance].info("Image URL 5" + JSON.stringify(rssarticle.imageURL)); }
+
+					if (self.debug) { self.logger[moduleinstance].info("Image URL 6" + JSON.stringify(rssarticle.imageURL)); }
+
+					if (self.debug) { self.logger[moduleinstance].info("article " + JSON.stringify(rssarticle)); }
+
 					rssitems.items.push(rssarticle);
 
 				}
+				else {
+					if (self.debug) { self.logger[moduleinstance].info("Allready sent this item or it is too old - just like me"); }
+				}
 
 			}
-
-			//console.log("finished reading");
 
 		});
 

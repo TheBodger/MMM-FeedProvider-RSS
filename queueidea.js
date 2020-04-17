@@ -10,7 +10,7 @@ exports.queue = function (queuename,debug) {
     this.queue_started = false;
     this.queue_busy = false;
     this.queuename = queuename;
-    this.debug = debug;
+    this.debug = false;
     this.queueitemid = 0;
     this.currentactiveid = -1;
     this.currentmeta = {};
@@ -34,14 +34,20 @@ exports.queue = function (queuename,debug) {
     }
 
     this.startqueue = function (interval) {
+
         if (this.debug) { this.logger.info(`In startqueue ${this.queue.length} queue is started:${this.queue_started} interval:${interval} `); }
+
         var self = this;
 
-        if (this.queue_started) { return; } //queue allready running so we ignore it
+        if (this.queue_started) { return; } //queue already running so we ignore it
+        if (this.queue.length == 0) {       //queue empty so we ignore it
+            if (this.debug) { this.logger.info(`In startqueue ${this.queue.length} queue is empty`); }
+            return;
+        }
 
         this.queue_started = true;
 
-         //run an initial item befopre we start waiting for each item beleo (may reduce interval to 0!!)
+         //run an initial item before we start waiting for each item beleo (may reduce interval to 0!!)
 
         self.queue_busy = true;
         self.currentmeta = self.meta.shift()
