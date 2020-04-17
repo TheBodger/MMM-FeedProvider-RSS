@@ -1,65 +1,67 @@
-{
-			module: "MMM-FeedProvider-RSS",
-			config: {
-				text: "Help me!!",
-				id: "MMFP3",
-				consumerids: ["MMFD3"],
-				datarefreshinterval: 11000,
-				feeds: [
-					{ feedname: 'sky_news', feedtitle: 'SKY ', feedurl: 'https://feeds.skynews.com/feeds/rss/home.xml', oldestAge: 24 * 1 * 60 },
-					{ feedname: 'BBC_World', feedtitle: 'BBC ', feedurl: 'https://feeds.bbci.co.uk/news/world/rss.xml', oldestAge: 24 * 1 * 60 },
-					{ feedname: 'CNN_latest', feedtitle: 'CNN ', feedurl: 'http://rss.cnn.com/rss/cnn_latest.rss', oldestAge: 24 * 1 * 60 },
+		//{
+		//	module: "MMM-FeedProvider-RSS",
+		//	config: {
+		//		text: "Help me!!",
+		//		id: "MMFP3",
+		//		consumerids: ["MMFD3"],
+		//		datarefreshinterval: 11000,
+		//		feeds: [
+		//			{ feedname: 'sky_news', feedtitle: 'SKY ', feedurl: 'https://feeds.skynews.com/feeds/rss/home.xml', oldestage: 24 * 1 * 60 },
+		//			{ feedname: 'bbc_world', feedtitle: 'BBC ', feedurl: 'https://feeds.bbci.co.uk/news/world/rss.xml', oldestage: 24 * 1 * 60 },
+		//			{ feedname: 'CNN_latest', feedtitle: 'CNN ', feedurl: 'http://rss.cnn.com/rss/cnn_latest.rss', oldestage: 24 * 1 * 60 },
 
-				]
-			}
-		},
+		//		]
+		//	}
+		//},
 
 		{
 			module: "MMM-FeedProvider-RSS",
 			config: {
 				text: "Help me!!",
 				id: "MMFP2",
-				consumerids: ["MMFD2"],
+				consumerids: ["MMFD2", "MMFD1", "MMFD3", ],
 				feeds: [
-
-					{ feedname: 'vamp', feedtitle: 'Vamp', feedurl: 'https://www.vampyvarnish.com/feed/', oldestAge: 24 * 1 * 60 },
-					{ feedname: 'Elle2', feedtitle: 'Elle', feedurl: 'https://www.elle.com/rss/all.xml/', oldestAge: 24 * 1 * 60 },
-					{ feedname: 'gq', feedtitle: 'GQ  ', feedurl: 'https://www.gq.com/feed/style/rss', oldestAge: 24 * 1 * 60 },
-					{ feedname: 'princesshairstyles', feedtitle: 'Hair', feedurl: 'https://www.princesshairstyles.com/feeds/posts/default?alt=rss', oldestAge: 24 * 1 * 60 },
-					{ feedname: 'Reddit', feedtitle: 'MKUp', feedurl: 'https://www.reddit.com/r/MakeupAddiction/.rss?format=xml', oldestAge: 24 * 1 * 60 },
+					{ feedname: 'vamp', feedtitle: 'Vamp', feedurl: 'https://www.vampyvarnish.com/feed/', oldestage: 24 * 1 * 60 },
+					{ feedname: 'Elle2', feedtitle: 'Elle', feedurl: 'https://www.elle.com/rss/all.xml/', oldestage: 24 * 1 * 60 },
+					{ feedname: 'gq', feedtitle: 'GQ  ', feedurl: 'https://www.gq.com/feed/style/rss', oldestage: 24 * 1 * 60 },
+					{ feedname: 'princesshairstyles', feedtitle: 'Hair', feedurl: 'https://www.princesshairstyles.com/feeds/posts/default?alt=rss', oldestage: 24 * 1 * 60 },
+					{ feedname: 'Reddit', feedtitle: 'MKUp', feedurl: 'https://www.reddit.com/r/MakeupAddiction/.rss?format=xml', oldestage: 24 * 1 * 60 },
 
 				],
-				datarefreshinterval: 5000,
+				datarefreshinterval: 15000,
 			}
 		},
-		{
-			module: "MMM-FeedProvider-RSS",
-			config: {
-				text: "Help me!!",
-				id: "MMFP1",
-				consumerids: ["MMFD1",],
-				feeds: [
+		//{
+		//	module: "MMM-FeedProvider-RSS",
+		//	config: {
+		//		text: "Help me!!",
+		//		id: "MMFP1",
+		//		consumerids: ["MMFD1",],
+		//		feeds: [
 
-					{ feedname: 'bf', feedtitle: 'Fail', feedurl: 'https://www.buzzfeed.com/fail.xml', oldestAge: 24 * 40 * 60 },
-					{ feedname: 'bc', feedtitle: 'Cmic', feedurl: 'https://www.buzzfeed.com/comics.xml', oldestAge: 24 * 40 * 60 },
-					{ feedname: 'bw', feedtitle: 'Wrld', feedurl: 'https://www.buzzfeed.com/world.xml', oldestAge: 24 * 4 * 60 },
-					{ feedname: 'bt', feedtitle: 'WTF ', feedurl: 'https://www.buzzfeed.com/wtf.xml', oldestAge: 24 * 40 * 60 },
+		//			{ feedname: 'bf', feedtitle: 'Fail', feedurl: 'https://www.buzzfeed.com/fail.xml', oldestage: 24 * 40 * 60 },
+		//			{ feedname: 'bc', feedtitle: 'Cmic', feedurl: 'https://www.buzzfeed.com/comics.xml', oldestage: 24 * 40 * 60 },
+		//			{ feedname: 'bw', feedtitle: 'Wrld', feedurl: 'https://www.buzzfeed.com/world.xml', oldestage: 24 * 4 * 60 },
+		//			{ feedname: 'bt', feedtitle: 'WTF ', feedurl: 'https://www.buzzfeed.com/wtf.xml', oldestage: 24 * 40 * 60 },
 
-				],
-				datarefreshinterval: 7000,
-			}
-		},
+		//		],
+		//		datarefreshinterval: 17000,
+		//	}
+		//},
 		{
 			module: "MMM-FeedDisplay",
-			position: "top_center",
+			position: "top_right",
 			config: {
 				id: "MMFD2",
-				articlemergetype: 'merge',
+				articlemergetype: 'alternate',
 				articleordertype: 'date',
 				displayarticlimage: true,
 				displayrefreshtime: 4000,
-				displayarticlecount: 4,
+				displayarticlecount: 3,
 				displayrotationstyle: 'scroll',
+				displaymodulewidth: "18vw",
+				displaysourcenamelength: 0,
+				displayarticleage: false,
 			}
 		},
 		{
@@ -67,25 +69,33 @@
 			position: "top_left",
 			config: {
 				id: "MMFD1",
-				articlemergetype: 'merge',
+				articlemergetype: 'alternate',
 				articleordertype: 'date',
 				displayarticlimage: true,
 				displayrefreshtime: 4000,
-				displayarticlecount: 4,
+				displayarticlecount: 3,
 				displayrotationstyle: 'scroll',
+				displaymodulewidth: "18vw",
+				displaysourcenamelength: 0,
+				displaytextbelowimage:true,
 				
 			}
 		},
 		{
 			module: "MMM-FeedDisplay",
-			position: "top_right",
+			position: "top_center",
 			config: {
 				id: "MMFD3",
-				articlemergetype: 'merge',
+				articlemergetype: 'alternate',
 				articleordertype: 'age',
 				displayrefreshtime: 4000,
-				displayarticlecount: 15,
+				displayarticlecount: 08,
 				displayrotationstyle: 'scroll',
-				displayarticlimage: true,
+				displayarticlimage: false,
+				displaymodulewidth: "18vw",
+				displaysourcenamelength: 4,
+				displayarticleage: true,
+				displayarticledescription: true,
+
 			}
 		},
