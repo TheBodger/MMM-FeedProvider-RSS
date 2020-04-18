@@ -17,7 +17,12 @@
     "module",
     "provider"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "axios": "latest",
+    "winston": "latest"
+
+
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/TheBodger/MMM-FeedProvider-RSS/issues"

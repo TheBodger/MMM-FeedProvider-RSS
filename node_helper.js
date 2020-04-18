@@ -395,7 +395,7 @@ module.exports = NodeHelper.create({
 
 			while (post = this.read()) {
 
-				self.logger[moduleinstance].info("feedparser post read: " + JSON.stringify(post.title));
+				if (this.debug) { self.logger[moduleinstance].info("feedparser post read: " + JSON.stringify(post.title)); }
 
 				//ignore any feed older than feed.lastFeedDate or older than the last feed sent back to the modules
 				//feed without a feed will be given the current latest feed data
