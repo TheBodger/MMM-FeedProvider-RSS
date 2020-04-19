@@ -35,15 +35,15 @@ Module.register("MMM-FeedProvider-RSS", {
 		datarefreshinterval: 5000,	//milliseconds to pause before checking for new data // common timer for all consumers
 									//tune to keep queue from clogging up
 		//feeds:
-		//oldestAge:	indicates how young a feed must be to be considered either ,
+		//oldestage:	indicates how young a feed must be to be considered either ,
 		//				a timestamp, must be in YYYY-MM-DD HH:MM:SS format to be accepted (use moments to validate)
 		//				the word today for midnight today, 
 		//				the number of minutes old as an integer
 		
 		feeds: [
-			{ feedname: 'BBC', feedtitle: 'World news from the BBC', feedurl: 'https://www.bbc.co.uk', oldestAge: '2020-04-01 00:00:01' },
-			{ feedname: 'ITV', feedtitle: 'Local news from the ITV', feedurl: 'https://www.itv.co.uk', oldestAge: 'today' },
-			{ feedname: 'C4', feedtitle: 'Nice news from the Channel 4', feedurl: 'https://www.c4.co.uk', oldestAge: 200 },
+			{ feedname: 'BBC', feedtitle: 'World news from the BBC', feedurl: 'https://www.bbc.co.uk', oldestage: '2020-04-01 00:00:01' },
+			{ feedname: 'ITV', feedtitle: 'Local news from the ITV', feedurl: 'https://www.itv.co.uk', oldestage: 'today' },
+			{ feedname: 'C4', feedtitle: 'Nice news from the Channel 4', feedurl: 'https://www.c4.co.uk', oldestage: 200 },
 		],
 		waitforqueuetime: 0010, //dont change this - it simply helps the queue processor to run with a controlled internal loop
 	},

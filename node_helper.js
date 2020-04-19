@@ -24,9 +24,11 @@ const fs = require('fs').promises;
 //pseudo structures for commonality across all modules
 //obtained from a helper file of modules
 
-var LOG = require('./LOG');
-var RSS = require('./RSS');
-var QUEUE = require('./queueidea');
+var LOG = require('../MMM-FeedUtilities/LOG');
+var RSS = require('../MMM-FeedUtilities/RSS');
+var QUEUE = require('../MMM-FeedUtilities/queueidea');
+var UTILITIES = require('../MMM-FeedUtilities/utilities');
+
 var rsssource = new RSS.RSSsource();
 
 // local variables, held at provider level as this is a common module
@@ -162,7 +164,7 @@ module.exports = NodeHelper.create({
 
 		if (this.logger[payload.moduleinstance] == null) {
 
-			this.logger[payload.moduleinstance] = LOG.createLogger("logs/logfile_" + payload.moduleinstance + ".log", payload.moduleinstance);
+			this.logger[payload.moduleinstance] = LOG.createLogger("logfile_" + payload.moduleinstance + ".log", payload.moduleinstance);
 
 		};
 
@@ -402,23 +404,23 @@ module.exports = NodeHelper.create({
 
 				//because the feeds can come in in reverse date order, we only update the latest feed date at the end in send
 
+				if (post.pubdate == null) {
+					post.pubdate = new Date(feed.latestfeedpublisheddate.getTime() + 1);
+					console.log("Article missing a date - so used: " + feed['latestfeedpublisheddate']);
+				}
+
 				if (post.pubdate >= feed.lastFeedDate && post.pubdate > feed.latestfeedpublisheddate) {
 
 					rssarticle.id = rssarticle.gethashCode(post.title);
 					rssarticle.title = post.title;
 
-					if (post.pubdate == null) {
-						rssarticle.pubdate = feed['latestfeedpublisheddate'];
-						console.log("Article missing a date - so used: " + feed['latestfeedpublisheddate']);
-					}
-					else {
-						rssarticle.pubdate = post.pubdate;
-						maxfeeddate = new Date(Math.max(maxfeeddate, post.pubdate));
-					}
-
+					rssarticle.pubdate = post.pubdate;
+					maxfeeddate = new Date(Math.max(maxfeeddate, post.pubdate));
+					
 					rssarticle.description = post.description;
 					rssarticle.age = rssarticle.getage(new Date(), rssarticle.pubdate); //in microseconds
 					rssarticle.categories = post.categories;
+					rssarticle.source = sourcetitle; //hard coded from the feed.
 
 					//go find an image
 					//1. they actually provided an image
