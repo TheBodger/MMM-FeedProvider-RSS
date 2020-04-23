@@ -19,9 +19,11 @@
   ],
   "dependencies": {
     "axios": "latest",
-    "winston": "latest"
-
-
+    "winston": "latest",
+    "moment": "latest",
+    "feedparser": "latest",
+    "request": "latest",
+    "fs": "latest"
   },
   "license": "MIT",
   "bugs": {
