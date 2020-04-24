@@ -104,8 +104,6 @@ module.exports = NodeHelper.create({
 		//options are timestamp format, today for midnight + 0.0001 seconds today, or age in minutes
 		//determine the format of the data in age
 
-		console.log(age);
-
 		var filterDate = new Date();
 
 		if (typeof (age) == 'number') {
