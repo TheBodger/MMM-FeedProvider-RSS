@@ -29,8 +29,6 @@ var RSS = require('../MMM-FeedUtilities/RSS');
 var QUEUE = require('../MMM-FeedUtilities/queueidea');
 var UTILITIES = require('../MMM-FeedUtilities/utilities');
 
-var rsssource = new RSS.RSSsource();
-
 // local variables, held at provider level as this is a common module
 
 var providerstorage = {};
@@ -305,6 +303,9 @@ module.exports = NodeHelper.create({
 		}
 
 		var rssitems = new RSS.RSSitems();
+
+		var rsssource = new RSS.RSSsource();
+		rsssource.sourceiconclass = 'fa '; //to be determined
 
 		//use these in the feedparser area
 		var sourcetitle = feed.sourcetitle;

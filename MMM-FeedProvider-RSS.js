@@ -277,7 +277,7 @@ Module.register("MMM-FeedProvider-RSS", {
 					fdp.consumerid = payload.consumerid;
 					fdp.providerid = nhpayload.providerid;
 					fdp.title = nhpayload.source.title;
-					fdp.sourcetitle = nhpayload.source.sourcetitle;
+					fdp.source = nhpayload.source;
 					fdp.payload = payload.stuffitems;
 
 					//console.log(this.identifier + "  >>>>>> Sending data: " + fdp.title + " " + fdp.consumerid + " " + fdp.providerid + " " + payload.stuffitems.length);
