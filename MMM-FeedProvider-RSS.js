@@ -32,7 +32,7 @@ Module.register("MMM-FeedProvider-RSS", {
 		text: "MMM-FeedProvider-RSS",
 		consumerids: ["MMFD1"], // the unique id of the consumer(s) to listen out for
 		id: "MMFP1", //the unique id of this provider
-		datarefreshinterval: 5000,	//milliseconds to pause before checking for new data // common timer for all consumers
+		datarefreshinterval: 60000,	//milliseconds to pause before checking for new data // common timer for all consumers
 									//tune to keep queue from clogging up
 		//feeds:
 		//oldestage:	indicates how young a feed must be to be considered either ,
