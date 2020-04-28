@@ -70,7 +70,7 @@ To use this module, add the following configuration block to the modules array i
 | `feedname`            |*Required* -  Name of the feed for reference purposes<br><br> **Possible values:** Any unique string. <br> **Default value:** none
 | `feedtitle`            |*Required* -  Title of the feed that will be displayed as the source if enabled in the MMM-FeedDisplay output.<br><br> **Possible values:** Any unique string. <br> **Default value:** none
 | `feedurl`            |*Required* -  URL of the RSS feed <br><br> **Possible values:** any valid URL referencing a RSS v1,v2 or Atom formatted feed <br> **Default value:** none
-| `oldestage`            |*Required* -  A filter on the "age" of an article. <br><br> **Possible values:** 'today' or a number of minutes or a valid date(See [Moment.js formats](http://momentjs.com/docs/#/parsing/string-format/). <br> **Default value:** none
+| `oldestage`            |*Required* -  Filter out any articles older than this "age" (As defined by the pubdate in the RSS feed). <br><br> **Possible values:** 'today' or a number of minutes or a valid date(See [Moment.js formats](http://momentjs.com/docs/#/parsing/string-format/). <br> **Default value:** none
 
 
 ### Additional Notes
