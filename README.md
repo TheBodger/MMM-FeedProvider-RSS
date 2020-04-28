@@ -29,32 +29,55 @@ To install the module, use your terminal to:
 
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 ```js
-var config = {
-    modules: [
-        ...
-        {
-            module: 'MMM-GoogleTasks',
-            header: "Google Tasks",
-            position: "top_left",
-            config: {
-                listID: "",
-                ...
-                // See below for Configuration Options
-            }
-        },
-        ...
-    ]
-}
+
+		{
+			module: "MMM-FeedProvider-RSS",
+			config: {
+				text: "MMM-FeedProvider-RSS",
+				id: "mmfp-rss",
+				consumerids: ["MMFD1"],
+				feeds: [
+					{ feedname: 'bbc_world', feedtitle: 'BBC ', feedurl: 'https://feeds.bbci.co.uk/news/world/rss.xml', oldestage: 'today' },
+					{ feedname: 'elle2', feedtitle: 'elle', feedurl: 'https://www.elle.com/rss/all.xml/', oldestage: 24 * 1 * 60 },
+					{ feedname: 'reddit', feedtitle: 'mkup', feedurl: 'https://www.reddit.com/r/makeupaddiction/.rss?format=xml', oldestage: '2020-04-01 00:00:00' },
+				],
+				datarefreshinterval: 15000,
+			}
+		},
+
 ```
 
 ### Configuration Options
 
 | Option                  | Details
 |------------------------ |--------------
-| `listID`                | *Required* - List ID printed from authenticate.js (see installation)
-| `maxResults`            | *Optional* - Max number of list items to retrieve. <br><br> **Possible values:** `0` - `100` <br> **Default value:** `10`
-| `showCompleted`         | *Optional* - Show completed task items <br><br> **Possible values:** `true`  `false` <br> **Default value:** `false`
-| `dateFormat`            | *Optional* - Format to use for due date <br><br> **Possible values:** See [Moment.js formats](http://momentjs.com/docs/#/parsing/string-format/) <br> **Default value:** `MMM Do` (e.g. Jan 18th)
-| `updateInterval`        | *Optional* - Interval at which content updates (Milliseconds) <br><br> **Possible values:** `2000` - `86400000` (Tasks API has default maximum of 50,000 calls per day.) <br> **Default value:** `10000` (10 seconds)
-| `animationSpeed`        | Speed of the update animation. (Milliseconds) <br><br> **Possible values:** `0` - `5000` <br> **Default value:** `2000` (2 seconds)
-| `tableClass`            | Name of the classes issued from `main.css`. <br><br> **Possible values:** xsmall, small, medium, large, xlarge. <br> **Default value:** _small_
+| `text`                | *Optional* - 
+| `consumerids`            | *Required* - a list of 1 or more the id of the consumer(s) to listen out for and return the articles found. <br><br> **Possible values:** A string exaclty matching the consumerids set in MMM-FeedDisplay <br> **Default value:** none
+| `id`         | *Required* - Show completed task items <br><br> **Possible values:** `true`  `false` <br> **Default value:** `false`
+| `datarefreshinterval`            | *Optional* - milliseconds to pause before checking for new data  <br><br> **Possible values:** ) <br> **Default value:** `MMM Do` (e.g. Jan 18th)
+| `feeds`        | *required* - See below for the feeds format
+| `waitforqueuetime`            |*Ignore* -  Name of the classes issued from `main.css`. <br><br> **Possible values:** xsmall, small, medium, large, xlarge. <br> **Default value:** _small_
+| `Feeds Format`            |
+| `feedname`            |*Required* -  Name of the feed for reference purposes<br><br> **Possible values:** Any unique string. <br> **Default value:** none
+| `feedtitle`            |*Required* -  Title of the feed that will be displayed as the source if enabled in the MMM-FeedDisplay output.<br><br> **Possible values:** Any unique string. <br> **Default value:** none
+| `feedurl`            |*Required* -  URL of the RSS feed <br><br> **Possible values:** xsmall, small, medium, large, xlarge. <br> **Default value:** _small_
+| `oldestage`            |*Required* -  A filter on the "age" of an article. <br><br> **Possible values:** 'today', a number of minutes, a valid date(See [Moment.js formats](http://momentjs.com/docs/#/parsing/string-format/). <br> **Default value:** none
+
+
+		text: "MMM-FeedProvider-RSS",
+		consumerids: ["MMFD1"], // the unique id of the consumer(s) to listen out for
+		id: "MMFP1", //the unique id of this provider
+		datarefreshinterval: 5000,	//milliseconds to pause before checking for new data // common timer for all consumers
+									//tune to keep queue from clogging up
+		//feeds:
+		//oldestage:	indicates how young a feed must be to be considered either ,
+		//				a timestamp, must be in YYYY-MM-DD HH:MM:SS format to be accepted (use moments to validate)
+		//				the word today for midnight today, 
+		//				the number of minutes old as an integer
+		
+		feeds: [
+			{ feedname: 'BBC', feedtitle: 'World news from the BBC', feedurl: 'https://www.bbc.co.uk', oldestage: '2020-04-01 00:00:01' },
+			{ feedname: 'ITV', feedtitle: 'Local news from the ITV', feedurl: 'https://www.itv.co.uk', oldestage: 'today' },
+			{ feedname: 'C4', feedtitle: 'Nice news from the Channel 4', feedurl: 'https://www.c4.co.uk', oldestage: 200 },
+		],
+		waitforqueuetime: 0010, //dont change this - it simply helps the queue processor to run with a controlled internal loop
