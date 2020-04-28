@@ -1,3 +1,5 @@
+		//an example of using 3 feed providers with 3 feed displays 
+
 		//{
 		//	module: "MMM-FeedProvider-RSS",
 		//	config: {
