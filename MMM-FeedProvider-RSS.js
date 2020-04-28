@@ -1,4 +1,11 @@
-//\MMM-FeedProvider-RSS.js
+/* global Module, MMM-FeedProvider-RSS */
+
+/* Magic Mirror
+ * Module: MMM-FeedProvider-RSS
+ *
+ * By Neil Scott
+ * MIT Licensed.
+ */
 
 var startTime = new Date();
 

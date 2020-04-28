@@ -7,7 +7,17 @@
 
 //as some feeds wont have a published date, they will be allocated a pseudo published date of the latest published date in the current processed feeds
 
-//if the module calls a RESET, then the date tracking is reset and all data will be sent 
+/* global Module, MMM-FeedProvider-RSS */
+
+/* Magic Mirror
+ * Module: node_helper
+ *
+ * By Neil Scott
+ * MIT Licensed.
+ */
+
+
+//if the module calls a RESET, then the date tracking is reset and all data will be sent
 
 //nodehelper stuff:
 //this.name String The name of the module
