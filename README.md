@@ -61,13 +61,20 @@ To use this module, add the following configuration block to the modules array i
 | Option                  | Details
 |------------------------ |--------------
 | `text`                | *Optional* - 
-| `consumerids`            | *Required* - a list of 1 or more Is of the consumer modules this module will provide for.<br><br> **Possible values:** A string exactly matching the ID of one or more MMM-FeedDisplay modules <br> **Default value:** none
+| `consumerids`            | *Required* - a list of 1 or more consumer modules this module will provide for.<br><br> **Possible values:** An array of strings exactly matching the ID of one or more MMM-FeedDisplay modules <br> **Default value:** none
 | `id`         | *Required* - The unique ID of this provider module<br><br> **Possible values:** any unique string<br> **Default value:** none
 | `datarefreshinterval`            | *Optional* - milliseconds to pause before checking for new data in the feeds.<br><br> **Possible values:** a number in milliseconds <br> **Default value:** `60000` 
-| `feeds`        | *required* - See below for the feeds format
+| `feeds`        | *required* - See below for the feed format
 | `waitforqueuetime`            |*Ignore* -  Queue delay between ending one queue item and starting the next <br><br> **Possible values:** a number in milliseconds. <br> **Default value:** `10`
 | `Feed Format`            |
 | `feedname`            |*Required* -  Name of the feed for reference purposes<br><br> **Possible values:** Any unique string. <br> **Default value:** none
 | `feedtitle`            |*Required* -  Title of the feed that will be displayed as the source if enabled in the MMM-FeedDisplay output.<br><br> **Possible values:** Any unique string. <br> **Default value:** none
-| `feedurl`            |*Required* -  URL of the RSS feed <br><br> **Possible values:** any valid URL to a RSS v1,v2 or Atom formatted feed <br> **Default value:** none
+| `feedurl`            |*Required* -  URL of the RSS feed <br><br> **Possible values:** any valid URL referencing a RSS v1,v2 or Atom formatted feed <br> **Default value:** none
 | `oldestage`            |*Required* -  A filter on the "age" of an article. <br><br> **Possible values:** 'today' or a number of minutes or a valid date(See [Moment.js formats](http://momentjs.com/docs/#/parsing/string-format/). <br> **Default value:** none
+
+
+### Additional Notes
+
+Reddit provides access to subreddits through a RSS formatted URL. See the reddit example in the example config above.
+
+This is a WIP; changes are being made all the time to improve the compatability across the modules. Please refresh this and the MMM-feedUtilities modules with a `git pull` in the relevant modeules folders.
