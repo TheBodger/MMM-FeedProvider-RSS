@@ -350,7 +350,10 @@ module.exports = NodeHelper.create({
 
 		req.on('response', function (res) {
 
-			if (res.statusCode != 200) return self.emit('error', new Error('Bad status code'));
+			if (res.statusCode != 200) {
+				console.error('Bad status code', res.statusCode);
+				return;
+			}
 
 			var charset = self.getParams(res.headers['content-type'] || '').charset;
 
