@@ -41,6 +41,7 @@ Module.register("MMM-FeedProvider-RSS", {
 		id: "MMFP1", //the unique id of this provider
 		datarefreshinterval: 60000,	//milliseconds to pause before checking for new data // common timer for all consumers
 									//tune to keep queue from clogging up
+		useheader: false,			//add headers to the request to the RSS server
 		//feeds:
 		//oldestage:	indicates how young a feed must be to be considered either ,
 		//				a timestamp, must be in YYYY-MM-DD HH:MM:SS format to be accepted (use moments to validate)
