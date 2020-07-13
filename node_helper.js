@@ -96,11 +96,34 @@ module.exports = NodeHelper.create({
 			//store the actual timestamp to start filtering, this will change as new feeds are pulled to the latest date of those feeds
 			//if no date is available on a feed, then the current latest date of a feed published is allocated to it
 
-			feed.lastFeedDate = self.calcTimestamp(configfeed.oldestage);
-			feed.feedURL = configfeed.feedurl;
-			feed.sourcetitle = configfeed.feedtitle;
+			//validate that all required entries are present, if not error message and ignore the feed
 
-			providerstorage[moduleinstance].trackingfeeddates.push(feed);
+			var validefeed = true;
+
+			if (configfeed.oldestage == null || configfeed.oldestage == '') {
+				validefeed = false;
+				console.error("Feed must include a valid oldestage entry - this feed is being ignored:", JSON.stringify(configfeed));
+			}
+
+			if (configfeed.feedtitle == null || configfeed.feedtitle == '') {
+				validefeed = false;
+				console.error("Feed must include a valid feedtitle entry - this feed is being ignored:", JSON.stringify(configfeed));
+			}
+
+			if (configfeed.feedurl == null || configfeed.feedurl == '') {
+				validefeed = false;
+				console.error("Feed must include a valid feedurl entry - this feed is being ignored:", JSON.stringify(configfeed));
+			}
+
+			if (validefeed) {
+
+				feed.lastFeedDate = self.calcTimestamp(configfeed.oldestage);
+				feed.feedURL = configfeed.feedurl;
+				feed.sourcetitle = configfeed.feedtitle;
+
+				providerstorage[moduleinstance].trackingfeeddates.push(feed);
+
+			}
 
 		});
 
