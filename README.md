@@ -28,7 +28,7 @@ To install the module, use your terminal to:
 
 ## Using the module
 
-### MagicMirror² Configuration
+### MagicMirrorÂ² Configuration
 
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 ```js
@@ -68,7 +68,6 @@ To use this module, add the following configuration block to the modules array i
 | `id`         | *Required* - The unique ID of this provider module<br><br> **Possible values:** any unique string<br> **Default value:** none
 | `datarefreshinterval`            | *Optional* - milliseconds to pause before checking for new data in the feeds.<br><br> **Possible values:** a number in milliseconds <br> **Default value:** `60000` 
 | `feeds`        | *required* - See below for the feed format
-| `datarefreshinterval`            | *Optional* - milliseconds to pause before checking for new data in the feeds.<br><br> **Possible values:** a number in milliseconds <br> **Default value:** `60000` 
 | `useheader`            | *Optional* - Sends HTTP headers to the RSS server. Some servers require headers, other fail if they receive them.<br><br> **Possible values:** true or false <br> **Default value:** `false` 
 | `waitforqueuetime`            |*Ignore* -  Queue delay between ending one queue item and starting the next <br><br> **Possible values:** a number in milliseconds. <br> **Default value:** `10`
 | `Feed Format`            |
@@ -81,5 +80,6 @@ To use this module, add the following configuration block to the modules array i
 ### Additional Notes
 
 Reddit provides access to subreddits through a RSS formatted URL. See the reddit example in the example config above.
+
 
 This is a WIP; changes are being made all the time to improve the compatability across the modules. Please refresh this and the MMM-feedUtilities modules with a `git pull` in the relevant modeules folders.
